@@ -133,7 +133,9 @@ not specified, no results are skipped.
 Specifies the maximum number of results to return. If not specified,
 there will be no limit to the number of returned results.
 
-#### Example 1
+## Query Examples
+
+### Example 1: Simple Query
 The following is an example of a relatively simple query in YAML format:
 
 ```yaml
@@ -162,7 +164,7 @@ session.query(SomeTable).filter(
     .limit(10)
 ```
 
-#### Example 2
+### Example 2: Slightly More Complex Query
 The following is an example of a more complex query in YAML format:
 
 ```yaml
@@ -193,6 +195,71 @@ session.query(SomeTable) \
             )
         )
     )
+```
+
+### Example 3: Complex JSON Query
+The following is an example of a relatively complex query in
+JSON format:
+
+```json
+{
+    "from": "SomeTable",
+    "where": [
+        {
+            "$or": [
+                {"field1": 10},
+                {
+                    "$gt": {
+                        "field2": 5
+                    }
+                }
+            ],
+            "$and": [
+                {"field3": "somevalue"},
+                {"field4": "othervalue"},
+                {
+                    "$or": {
+                        "field5": 5,
+                        "field6": 6
+                    }
+                }
+            ]
+        }
+    ],
+    "orderBy": [
+        "field1",
+        "-field2
+    ],
+    "offset": 2,
+    "limit": 10
+}
+```
+
+This query would be translated into the following SQLAlchemy code:
+
+```python
+from sqlalchemy.sql.expression import and_, or_, not_
+
+session.query(SomeTable) \
+    .filter(
+        and_(
+            or_(
+                SomeTable.field1 == 10,
+                SomeTable.field2 > 5
+            ),
+            and_(
+                SomeTable.field3 == "somevalue",
+                SomeTable.field4 == "othervalue",
+                or_(
+                    SomeTable.field5 == 5,
+                    SomeTable.field6 == 6
+                )
+            )
+        )
+    ) \
+    .order_by(SomeTable.field1, SomeTable.field2.desc()) \
+    .offset(2) \
+    .limit(10)
 ```
 
 ## License

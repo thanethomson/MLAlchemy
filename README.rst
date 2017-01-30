@@ -248,10 +248,3 @@ IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
 CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-.. |Build Status| image:: https://travis-ci.org/thanethomson/MLAlchemy.svg?branch=master
-   :target: https://travis-ci.org/thanethomson/MLAlchemy
-.. |PyPI| image:: https://img.shields.io/pypi/v/mlalchemy.svg
-   :target: https://pypi.python.org/pypi/mlalchemy
-.. |PyPI| image:: https://img.shields.io/pypi/pyversions/mlalchemy.svg
-   :target: https://pypi.python.org/pypi/mlalchemy

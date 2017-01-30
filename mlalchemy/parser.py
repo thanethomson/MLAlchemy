@@ -72,7 +72,7 @@ def parse_query(qd):
     return MLQuery(
         qd['from'],
         query_fragment=qf,
-        order_by=qd.get('orderBy', qd.get('order-by', None)),
+        order_by=qd.get('orderBy', qd.get('order-by', qd.get('order_by', None))),
         offset=qd.get('offset', None),
         limit=qd.get('limit', None)
     )

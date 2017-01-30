@@ -47,6 +47,16 @@ YAML_LIMIT_QUERY = """from: User
 limit: 2
 """
 
+YAML_ORDERED_QUERY = """from: User
+order-by: "-date-of-birth"
+"""
+
+YAML_COMPLEX_ORDERED_QUERY = """from: User
+order-by:
+    - last-name
+    - "-date-of-birth"
+"""
+
 
 DEBUG_LOGGING = (os.environ.get("DEBUG", False) == "True")
 
@@ -92,6 +102,8 @@ class TestSqlAlchemyQuerying(unittest.TestCase):
         self.assertYoungUsers(parse_yaml_query(YAML_QUERY_YOUNG_USERS))
         self.assertMichaelsUsers(parse_json_query(JSON_QUERY_LASTNAME_MICHAEL))
         self.assertLimits(parse_yaml_query(YAML_LIMIT_QUERY))
+        self.assertOrderedSimple(parse_yaml_query(YAML_ORDERED_QUERY))
+        self.assertOrderedComplex(parse_yaml_query(YAML_COMPLEX_ORDERED_QUERY))
 
     def assertAllUsers(self, mlquery):
         seen_users = self.query_seen_users(mlquery)
@@ -116,6 +128,18 @@ class TestSqlAlchemyQuerying(unittest.TestCase):
         self.assertEqual(2, len(seen_users))
         self.assertIn(1, seen_users)
         self.assertIn(2, seen_users)
+
+    def assertOrderedSimple(self, mlquery):
+        results = mlquery.to_sqlalchemy(self.session, self.tables).all()
+        self.assertEqual(3, results[0].id)
+        self.assertEqual(1, results[1].id)
+        self.assertEqual(2, results[2].id)
+
+    def assertOrderedComplex(self, mlquery):
+        results = mlquery.to_sqlalchemy(self.session, self.tables).all()
+        self.assertEqual(1, results[0].id)
+        self.assertEqual(3, results[1].id)
+        self.assertEqual(2, results[2].id)
 
     def query_seen_users(self, mlquery):
         results = mlquery.to_sqlalchemy(self.session, self.tables).all()

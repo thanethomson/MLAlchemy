@@ -60,6 +60,11 @@ class MLQuery(object):
 
             for ob in order_by:
                 field_name = ob.strip("-")
+                # make sure it's in snake_case
+                if is_camelcase_string(field_name):
+                    field_name = camelcase_to_snakecase(field_name)
+                elif is_kebabcase_string(field_name):
+                    field_name = kebabcase_to_snakecase(field_name)
                 self.order_by.append({field_name: ORDER_DESC if ob[0] == "-" else ORDER_ASC})
                 self.unique_field_names.add(field_name)
 
@@ -98,8 +103,11 @@ class MLQuery(object):
         if self.order_by is not None:
             criteria = []
             for order_by in self.order_by:
-                field, direction = order_by.items()[0]
-                criterion = table.c[field]
+                field, direction = [i for i in order_by.items()][0]
+                criterion = getattr(table, field)
+                if not isinstance(criterion, QueryableAttribute):
+                    raise InvalidFieldError("Invalid field for specified table: %s" % field)
+
                 if direction == ORDER_ASC:
                     criterion = criterion.asc()
                 elif direction == ORDER_DESC:

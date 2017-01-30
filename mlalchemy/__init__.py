@@ -6,4 +6,4 @@ from mlalchemy.structures import *
 from mlalchemy.parser import *
 
 
-__version__ = "0.1.2"
+__version__ = "0.1.3"

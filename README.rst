@@ -62,8 +62,8 @@ The raw SQL query for the above would look like:
 
 .. code:: sql
 
-    SELECT * FROM users WHERE \
-      (last_name = "Michaels" OR first_name = "Michael") AND \
+    SELECT * FROM users WHERE
+      (last_name = "Michaels" OR first_name = "Michael") AND
       (date_of_birth > "1984-01-01")
 
 Example JSON Queries

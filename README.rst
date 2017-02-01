@@ -172,7 +172,7 @@ As mentioned before, queries can either be supplied in YAML format or in
 JSON format to one of the respective parsers.
 
 ``from``
-^^^^^^^^
+~~~~~~~~
 
 At present, MLAlchemy can only support selecting data from a single
 table (multi-table support is planned in future). Here, the ``from``
@@ -180,7 +180,7 @@ parameter allows you to specify the name of the table from which to
 select data.
 
 ``where``
-^^^^^^^^^
+~~~~~~~~~
 
 The ``where`` parameter defines, in hierarchical fashion, the structure
 of the logical query to perform. There are 3 kinds of key types in the
@@ -202,7 +202,7 @@ JSON/YAML structures, as described in the following table.
 +-----------------+----------------------------+---------------------------------------+
 
 ``order-by`` (YAML) or ``orderBy`` (JSON)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Provides the ordering for the resulting query. Must either be a single
 field name or a list of field names, with the direction specifier in
@@ -231,13 +231,13 @@ A more complex example:
         - "-field2"
 
 ``offset``
-^^^^^^^^^^
+~~~~~~~~~~
 
 Specifies the number of results to skip before providing results. If not
 specified, no results are skipped.
 
 ``limit``
-^^^^^^^^^
+~~~~~~~~~
 
 Specifies the maximum number of results to return. If not specified,
 there will be no limit to the number of returned results.
@@ -345,7 +345,7 @@ format:
         ],
         "orderBy": [
             "field1",
-            "-field2
+            "-field2"
         ],
         "offset": 2,
         "limit": 10

@@ -20,6 +20,84 @@ Installation via PyPI:
 > pip install mlalchemy
 ```
 
+## Query Examples
+To get a feel for what MLAlchemy queries look like, take a look at the
+following. **Note**: All field names are converted from `camelCase` or `kebab-case`
+to `snake_case` prior to query execution.
+
+### Example YAML Queries
+Fetching all the entries from a table called `Users`:
+
+```yaml
+from: Users
+```
+
+Limiting the users to only those with the last name "Michaels":
+
+```yaml
+from: Users
+where:
+  last-name: Michaels
+```
+
+A more complex YAML query:
+
+```yaml
+from: Users
+where:
+  $or:
+    last-name: Michaels
+    first-name: Michael
+  $gt:
+    date-of-birth: 1984-01-01
+```
+
+The raw SQL query for the above would look like:
+
+```sql
+SELECT * FROM users WHERE \
+  (last_name = "Michaels" OR first_name = "Michael") AND \
+  (date_of_birth > "1984-01-01")
+```
+
+### Example JSON Queries
+The same queries as above, but in JSON format. To fetch all entries
+in the `Users` table:
+
+```json
+{
+    "from": "Users"
+}
+```
+
+Limiting the users to only those with the last name "Michaels":
+
+```json
+{
+    "from": "Users",
+    "where": {
+        "lastName": "Michaels"
+    }
+}
+```
+
+And finally, the more complex query:
+
+```json
+{
+    "from": "Users",
+    "where": {
+        "$or": {
+            "lastName": "Michaels",
+            "firstName": "Michael"
+        },
+        "$gt": {
+            "dateOfBirth": "1984-01-01"
+        }
+    }
+}
+```
+
 ## Usage
 A simple example of how to use MLAlchemy:
 
@@ -92,11 +170,11 @@ The `where` parameter defines, in hierarchical fashion, the structure
 of the logical query to perform. There are 3 kinds of key types in
 the JSON/YAML structures, as described in the following table.
 
-| Kind            | Description                                           | Options                                              |
-| --------------- | ----------------------------------------------------- | ---------------------------------------------------- |
-| **Operators**   | Logical (boolean) operators for combining sub-clauses | `$and`, `$or`, `$not`                                |
-| **Comparators** | Comparative operators for comparing fields to values  | `$eq`, `$gt`, `$gte`, `$lt`, `$lte`, `$like`, `$neq` |
-| **Field Names** | The name of a field in the `from` table               | (Depends on table)                                   |
+| Kind            | Description                                           | Options                                                                    |
+| --------------- | ----------------------------------------------------- | -------------------------------------------------------------------------- |
+| **Operators**   | Logical (boolean) operators for combining sub-clauses | `$and`, `$or`, `$not`                                                      |
+| **Comparators** | Comparative operators for comparing fields to values  | `$eq`, `$gt`, `$gte`, `$lt`, `$lte`, `$like`, `$neq`, `$in`, `$nin`, `$is` |
+| **Field Names** | The name of a field in the `from` table               | (Depends on table)                                                         |
 
 #### `order-by` (YAML) or `orderBy` (JSON)
 Provides the ordering for the resulting query. Must either be a single

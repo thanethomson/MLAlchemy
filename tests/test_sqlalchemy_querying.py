@@ -14,6 +14,7 @@ from sqlalchemy.orm import sessionmaker
 from datetime import date
 
 from mlalchemy import parse_yaml_query, parse_json_query
+from mlalchemy.constants import *
 
 Base = declarative_base()
 
@@ -57,6 +58,52 @@ order-by:
     - "-date-of-birth"
 """
 
+YAML_COMPARATOR_QUERIES = {
+    COMP_EQ: ("from: User\n"
+              "where:\n"
+              "  first-name: Michael", {1,}),
+    COMP_GT: ("from: User\n"
+              "where:\n"
+              "  $gt:\n"
+              "    children: 2", {3,}),
+    COMP_GTE: ("from: User\n"
+               "where:\n"
+               "  $gte:\n"
+               "    children: 2", {2, 3, 4}),
+    COMP_LT: ("from: User\n"
+              "where:\n"
+              "  $lt:\n"
+              "    children: 2", {1,}),
+    COMP_LTE: ("from: User\n"
+               "where:\n"
+               "  $lte:\n"
+               "    children: 2", {1, 2, 4}),
+    COMP_NEQ: ("from: User\n"
+               "where:\n"
+               "  $neq:\n"
+               "    last-name: Michaels", {1,}),
+    COMP_LIKE: ("from: User\n"
+                "where:\n"
+                "  $like:\n"
+                "    first-name: Mich%", {1,}),
+    COMP_IN: ("from: User\n"
+              "where:\n"
+              "  $in:\n"
+              "    last-name:\n"
+              "      - Anderson\n"
+              "      - Michaels", {1, 2, 3}),
+    COMP_NIN: ("from: User\n"
+               "where:\n"
+               "  $nin:\n"
+               "    children:\n"
+               "      - 2\n"
+               "      - 3", {1,}),
+    COMP_IS: ("from: User\n"
+              "where:\n"
+              "  $is:\n"
+              "    last-name: null", {4,})
+}
+
 
 DEBUG_LOGGING = (os.environ.get("DEBUG", False) == "True")
 
@@ -95,6 +142,21 @@ class TestSqlAlchemyQuerying(unittest.TestCase):
                 level=logging.DEBUG,
                 format='%(asctime)s\t%(name)s\t%(levelname)s\t%(message)s',
             )
+
+    def tearDown(self):
+        self.session.close()
+
+    def test_all_comparators(self):
+        user4 = User(first_name="Gary", last_name=None, date_of_birth=date(1985, 2, 3), children=2)
+        self.session.add(user4)
+        self.session.commit()
+        for comp, crit in iteritems(YAML_COMPARATOR_QUERIES):
+            qs, expected_ids = crit
+            results = parse_yaml_query(qs).to_sqlalchemy(self.session, self.tables).all()
+            seen_ids = set([result.id for result in results])
+            self.assertEqual(expected_ids, seen_ids, "Failed with comparator: %s (expected %s, got %s)" % (
+                comp, expected_ids, seen_ids
+            ))
 
     def test_basic_querying(self):
         self.assertAllUsers(parse_yaml_query(YAML_QUERY_ALL_USERS))

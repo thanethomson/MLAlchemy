@@ -14,6 +14,9 @@ __all__ = [
     "COMP_LTE",
     "COMP_NEQ",
     "COMP_LIKE",
+    "COMP_IN",
+    "COMP_NIN",
+    "COMP_IS",
     "COMPARATORS",
     "ORDER_ASC",
     "ORDER_DESC",
@@ -35,7 +38,11 @@ COMP_LT = "$lt"
 COMP_LTE = "$lte"
 COMP_NEQ = "$neq"
 COMP_LIKE = "$like"
-COMPARATORS = {COMP_EQ, COMP_GT, COMP_GTE, COMP_LT, COMP_LTE, COMP_NEQ, COMP_LIKE}
+COMP_IN = "$in"
+COMP_NIN = "$nin"
+COMP_IS = "$is"
+COMPARATORS = {COMP_EQ, COMP_GT, COMP_GTE, COMP_LT, COMP_LTE, COMP_NEQ, COMP_LIKE, COMP_IN, COMP_NIN,
+               COMP_IS}
 
 ORDER_ASC = "asc"
 ORDER_DESC = "desc"

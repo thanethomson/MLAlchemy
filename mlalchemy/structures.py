@@ -278,6 +278,12 @@ class MLClause(object):
             return col != self.value
         elif self.comp == COMP_LIKE:
             return col.like(self.value)
+        elif self.comp == COMP_IN:
+            return col.in_(self.value)
+        elif self.comp == COMP_NIN:
+            return ~col.in_(self.value)
+        elif self.comp == COMP_IS:
+            return col.is_(self.value)
 
         # default to equals
         return col == self.value

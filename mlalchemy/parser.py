@@ -33,7 +33,7 @@ def parse_yaml_query(yaml_content):
         On success, the processed MLQuery object.
     """
     logger.debug("Attempting to parse YAML content:\n%s" % yaml_content)
-    return parse_query(yaml.load(yaml_content))
+    return parse_query(yaml.safe_load(yaml_content))
 
 
 def parse_json_query(json_content):
